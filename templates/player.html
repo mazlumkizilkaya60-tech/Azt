@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>{{ title or 'Player' }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" href="{{ url_for('favicon') }}">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body class="player-page">
+  <div class="player-shell" id="playerShell">
+    <video id="video" class="player-video" playsinline></video>
+
+    <div class="player-top" id="playerTop">
+      <div class="player-back selector" id="playerBack">GERİ</div>
+      <div class="player-title-wrap">
+        <div class="player-kicker">FIRATFLIX PLAYER</div>
+        <div class="player-title">{{ title }}</div>
+      </div>
+    </div>
+
+    <div class="player-center-hint" id="bigPlay" hidden>
+      <button class="player-bigplay selector" id="bigPlayBtn">▶</button>
+    </div>
+
+    <div class="player-panel" id="playerPanel">
+      <div class="player-progress selector" id="playerTimeline" tabindex="0">
+        <div class="player-progress__buffer" id="playerBuffer"></div>
+        <div class="player-progress__bar" id="playerBar"></div>
+      </div>
+
+      <div class="player-times">
+        <span id="currentTime">00:00</span>
+        <span id="durationTime">00:00</span>
+      </div>
+
+      <div class="player-actions">
+        <div class="player-actions__left">
+          <button class="player-btn selector" id="seekBack">-10s</button>
+          <button class="player-btn player-btn--primary selector" id="playPause">PLAY</button>
+          <button class="player-btn selector" id="seekForward">+10s</button>
+          <button class="player-btn selector" id="muteBtn">MUTE</button>
+          <button class="player-btn selector" id="nextEpisodeBtn" {% if not next_episode_url %}hidden{% endif %}>SONRAKİ</button>
+          <button class="player-btn selector" id="directBtn" hidden>DIREKT</button>
+        </div>
+        <div class="player-actions__right">
+          <button class="player-btn selector" id="pipBtn">PIP</button>
+          <button class="player-btn selector" id="fsBtn">FULL</button>
+        </div>
+      </div>
+
+      <div class="player-status" id="playerStatus">Hazır</div>
+    </div>
+  </div>
+
+  <div class="modal" id="playerError" hidden>
+    <div class="modal__backdrop"></div>
+    <div class="modal__dialog modal__dialog--error">
+      <div class="modal__eyebrow">HATA</div>
+      <h3>Oynatma Hatası</h3>
+      <p id="playerErrorText">Kaynak açılamadı.</p>
+      <div class="modal__buttons">
+        <button class="hero-btn hero-btn--primary selector" id="retryBtn">TEKRAR DENE</button>
+        <button class="hero-btn selector" id="reconnectBtn">YENİDEN BAĞLAN</button>
+        <button class="hero-btn selector" id="copyUrlBtn">URL KOPYALA</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.playerConfig = {
+      title: {{ title|tojson }},
+      rawUrl: {{ url|tojson }},
+      playbackUrl: {{ playback_url|tojson }},
+      itemId: {{ item_id|tojson }},
+      mode: {{ mode|tojson }},
+      seriesId: {{ series_id|tojson }},
+      nextEpisodeUrl: {{ next_episode_url|tojson }}
+    };
+  </script>
+
+  <script src="{{ url_for('static', filename='js/spatial-navigation.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/remote.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/player.js') }}"></script>
+<script src="{{ url_for('static', filename='js/nexus_retry.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/ultra_player.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/continue.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>{% block title %}FIRATFLIX{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" href="{{ url_for('favicon') }}">
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="app-shell">
+  {% block body %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/spatial-navigation.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/remote.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,197 @@
+
+{% extends 'base.html' %}
+{% block title %}FIRATFLIX GALAXY{% endblock %}
+{% block body %}
+
+<div class="topbar topbar--landing">
+  <div class="topbar__left">
+    <div class="logo selector" data-href="/">FIRATFLIX</div>
+    <div class="topbar__section">GALAXY ENGINE</div>
+  </div>
+  <div class="topbar__actions">
+    <button class="icon-btn selector" data-open-search>ARA</button>
+    <button class="icon-btn selector" data-href="/browse?m=movies">FİLMLER</button>
+    <button class="icon-btn selector" data-href="/browse?m=series">DİZİLER</button>
+    <button class="icon-btn selector" data-href="/browse?m=live">CANLI TV</button>
+  </div>
+</div>
+
+<section class="hero galaxy-hero" id="hero" style="background-image:url('{{ hero_items[0].img if hero_items else '' }}')">
+  <div class="hero__shade"></div>
+  <div class="hero__content">
+    <div class="hero__eyebrow">FIRATFLIX GALAXY EXPERIENCE</div>
+    <h1 class="hero__title" id="heroTitle">{{ hero_items[0].title if hero_items else 'FIRATFLIX' }}</h1>
+    <p class="hero__desc" id="heroDesc">{{ hero_items[0].desc if hero_items else 'Film, dizi ve canlı yayınları tek ekranda keşfet.' }}</p>
+    <div class="hero__meta" id="heroMeta">
+      {% if hero_items and hero_items[0].year %}<span>{{ hero_items[0].year }}</span>{% endif %}
+      {% if hero_items and hero_items[0].genre %}<span>{{ hero_items[0].genre }}</span>{% endif %}
+      {% if hero_items and hero_items[0].rating %}<span>⭐ {{ hero_items[0].rating }}</span>{% endif %}
+    </div>
+    <div class="hero__buttons">
+      {% if hero_items %}
+      <button class="hero-btn hero-btn--primary selector" id="heroPlay"
+        data-action="play"
+        data-mode="{{ hero_items[0].mode }}"
+        data-id="{{ hero_items[0].id }}"
+        data-title="{{ hero_items[0].title }}"
+        data-url="{{ hero_items[0].url }}"
+        data-desc="{{ hero_items[0].desc|e }}"
+        data-img="{{ hero_items[0].img }}"
+        data-year="{{ hero_items[0].year }}"
+        data-genre="{{ hero_items[0].genre }}"
+        data-rating="{{ hero_items[0].rating }}">İZLE</button>
+      <button class="hero-btn selector" id="heroInfo"
+        data-mode="{{ hero_items[0].mode }}"
+        data-id="{{ hero_items[0].id }}"
+        data-title="{{ hero_items[0].title }}"
+        data-url="{{ hero_items[0].url }}"
+        data-desc="{{ hero_items[0].desc|e }}"
+        data-img="{{ hero_items[0].img }}"
+        data-year="{{ hero_items[0].year }}"
+        data-genre="{{ hero_items[0].genre }}"
+        data-rating="{{ hero_items[0].rating }}">BİLGİ</button>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<main class="landing-content">
+  <section class="rail" id="nexusContinueRail" hidden>
+    <div class="rail__head"><h2>İzlemeye Devam Et</h2><a class="selector rail__more" href="/browse?m=series">Tümü</a></div>
+    <div class="rail__body card-rail"></div>
+  </section>
+
+  <section class="rail">
+    <div class="rail__head"><h2>Yeni Filmler</h2><a class="selector rail__more" href="/browse?m=movies">Tümü</a></div>
+    <div class="rail__body card-rail">
+      {% for item in latest_movies %}
+      <article class="poster-card selector" tabindex="0"
+        data-action="open"
+        data-mode="{{ item.mode }}"
+        data-id="{{ item.id }}"
+        data-title="{{ item.title }}"
+        data-url="{{ item.url }}"
+        data-desc="{{ item.desc|e }}"
+        data-img="{{ item.img }}"
+        data-year="{{ item.year }}"
+        data-genre="{{ item.genre }}"
+        data-rating="{{ item.rating }}">
+        <img data-src="{{ item.img }}" alt="{{ item.title }}" loading="lazy">
+        <div class="poster-card__meta">
+          <div class="poster-card__title">{{ item.title }}</div>
+          <div class="poster-card__sub">{{ item.year or item.genre }}</div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="rail">
+    <div class="rail__head"><h2>Trend Filmler</h2><a class="selector rail__more" href="/browse?m=movies">Tümü</a></div>
+    <div class="rail__body card-rail">
+      {% for item in trending_movies %}
+      <article class="poster-card selector" tabindex="0"
+        data-action="open"
+        data-mode="{{ item.mode }}"
+        data-id="{{ item.id }}"
+        data-title="{{ item.title }}"
+        data-url="{{ item.url }}"
+        data-desc="{{ item.desc|e }}"
+        data-img="{{ item.img }}"
+        data-year="{{ item.year }}"
+        data-genre="{{ item.genre }}"
+        data-rating="{{ item.rating }}">
+        <img data-src="{{ item.img }}" alt="{{ item.title }}" loading="lazy">
+        <div class="poster-card__meta">
+          <div class="poster-card__title">{{ item.title }}</div>
+          <div class="poster-card__sub">{{ item.year or item.genre }}</div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="rail">
+    <div class="rail__head"><h2>Popüler Diziler</h2><a class="selector rail__more" href="/browse?m=series">Tümü</a></div>
+    <div class="rail__body card-rail">
+      {% for item in popular_series %}
+      <article class="poster-card selector" tabindex="0"
+        data-action="open"
+        data-mode="{{ item.mode }}"
+        data-id="{{ item.id }}"
+        data-title="{{ item.title }}"
+        data-url="{{ item.url }}"
+        data-desc="{{ item.desc|e }}"
+        data-img="{{ item.img }}"
+        data-year="{{ item.year }}"
+        data-genre="{{ item.genre }}"
+        data-rating="{{ item.rating }}">
+        <img data-src="{{ item.img }}" alt="{{ item.title }}" loading="lazy">
+        <div class="poster-card__meta">
+          <div class="poster-card__title">{{ item.title }}</div>
+          <div class="poster-card__sub">{{ item.year or item.genre }}</div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="rail">
+    <div class="rail__head"><h2>Canlı TV Grid</h2><a class="selector rail__more" href="/browse?m=live">Tümü</a></div>
+    <div class="live-grid">
+      {% for item in live_channels %}
+      <article class="channel-grid-card selector" tabindex="0"
+        data-action="play"
+        data-mode="{{ item.mode }}"
+        data-id="{{ item.id }}"
+        data-title="{{ item.title }}"
+        data-url="{{ item.url }}"
+        data-desc="{{ item.desc|e }}"
+        data-img="{{ item.img }}">
+        <img data-src="{{ item.img }}" alt="{{ item.title }}" loading="lazy">
+        <div class="channel-grid-card__body">
+          <div class="channel-grid-card__title">{{ item.title }}</div>
+          <div class="channel-grid-card__epg" data-channel-id="{{ item.id }}">NOW / NEXT yükleniyor</div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="infoModal" hidden>
+  <div class="modal__backdrop"></div>
+  <div class="modal__dialog modal__dialog--info">
+    <img id="infoModalImg" class="modal__poster" src="" alt="">
+    <div class="modal__body">
+      <div class="modal__eyebrow">BİLGİ</div>
+      <h3 id="infoModalTitle"></h3>
+      <p id="infoModalDesc"></p>
+      <div class="modal__buttons">
+        <button class="hero-btn hero-btn--primary selector" id="infoWatch">İZLE</button>
+        <button class="hero-btn selector" data-close-modal="infoModal">KAPAT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="searchModal" hidden>
+  <div class="modal__backdrop"></div>
+  <div class="modal__dialog modal__dialog--search">
+    <div class="searchbox">
+      <input id="searchInputModal" class="selector" type="text" placeholder="Film, dizi, kanal ara...">
+      <button class="hero-btn selector" id="searchGo">ARA</button>
+      <button class="hero-btn selector" data-close-modal="searchModal">KAPAT</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.heroItems = {{ hero_items|tojson }};
+window.pageMode = 'landing';
+</script>
+<script src="{{ url_for('static', filename='js/galaxy_home.js') }}"></script>
+{% endblock %}

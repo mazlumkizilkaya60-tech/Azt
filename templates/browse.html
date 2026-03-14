@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}FIRATFLIX - {{ mode|upper }}{% endblock %}
+{% block body %}
+<div class="topbar">
+  <div class="topbar__left">
+    <div class="logo selector" data-href="/">FIRATFLIX</div>
+    <div class="topbar__section">{{ 'CANLI TV' if mode=='live' else 'DİZİLER' if mode=='series' else 'FİLMLER' }}</div>
+  </div>
+  <div class="topbar__actions">
+    <input id="gridSearch" class="topbar__search selector" placeholder="Ara...">
+    <button class="icon-btn selector" data-open-search>ARA</button>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__section">KATEGORİLER</div>
+    <a class="sidebar__item selector {{ 'is-active' if not cat_id else '' }}" href="/browse?m={{ mode }}">TÜMÜ</a>
+    {% for c in categories %}
+    <a class="sidebar__item selector {{ 'is-active' if cat_id==c.category_id|string else '' }}" href="/browse?m={{ mode }}&c={{ c.category_id }}">{{ c.category_name }}</a>
+    {% endfor %}
+  </aside>
+
+  <main class="content">
+    <section class="content__section">
+      <div class="content__head">
+        <h1>{{ 'Canlı TV' if mode=='live' else 'Dizi Kataloğu' if mode=='series' else 'Film Kataloğu' }}</h1>
+        <button class="selector sidebar-toggle" id="sidebarToggle">KATEGORİ</button>
+      </div>
+      <div class="grid" id="mainGrid">
+        {% for item in items %}
+        <article class="grid-card selector"
+          tabindex="0"
+          data-name="{{ item.title|lower }}"
+          data-action="open"
+          data-mode="{{ item.mode }}"
+          data-id="{{ item.id }}"
+          data-title="{{ item.title }}"
+          data-url="{{ item.url }}"
+          data-desc="{{ item.desc|e }}"
+          data-img="{{ item.img }}">
+          <div class="grid-card__poster">
+            <img src="{{ item.img }}" alt="{{ item.title }}" loading="lazy">
+            {% if item.rating %}<div class="grid-card__badge">{{ item.rating }}</div>{% endif %}
+          </div>
+          <div class="grid-card__title">{{ item.title }}</div>
+          <div class="grid-card__sub">{{ item.year or item.genre }}</div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal" id="infoModal" hidden>
+  <div class="modal__backdrop"></div>
+  <div class="modal__dialog modal__dialog--info">
+    <img id="infoModalImg" class="modal__poster" src="" alt="">
+    <div class="modal__body">
+      <div class="modal__eyebrow">İÇERİK DETAYI</div>
+      <h3 id="infoModalTitle"></h3>
+      <p id="infoModalDesc"></p>
+      <div class="modal__buttons">
+        <button class="hero-btn hero-btn--primary selector" id="infoWatch">İZLE</button>
+        <button class="hero-btn selector" data-close-modal="infoModal">KAPAT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="searchModal" hidden>
+  <div class="modal__backdrop"></div>
+  <div class="modal__dialog modal__dialog--search">
+    <div class="searchbox">
+      <input id="searchInputModal" class="selector" type="text" placeholder="Film, dizi, kanal ara...">
+      <button class="hero-btn selector" id="searchGo">ARA</button>
+      <button class="hero-btn selector" data-close-modal="searchModal">KAPAT</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<div class="modal" id="seriesModal" hidden>
+  <div class="modal__backdrop"></div>
+  <div class="modal__dialog modal__dialog--series">
+    <div class="series-picker">
+      <div class="series-picker__title" id="seriesModalTitle">SEZONLAR</div>
+      <div class="series-picker__columns">
+        <div class="series-picker__seasons" id="seasonList"></div>
+        <div class="series-picker__episodes" id="episodeList"></div>
+      </div>
+      <div class="modal__buttons modal__buttons--end">
+        <button class="hero-btn selector" data-close-modal="seriesModal">KAPAT</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.pageMode = {{ mode|tojson }};
+</script>
+{% endblock %}

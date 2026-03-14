@@ -1,0 +1,15 @@
+
+<section class="rail">
+  <div class="rail__head"><h2>İzlemeye Devam Et</h2></div>
+  <div class="rail__body card-rail">
+  {% for item in items %}
+    <article class="poster-card selector"
+        data-action="play"
+        data-mode="{{ item.mode }}"
+        data-id="{{ item.id }}"
+        data-title="{{ item.title }}">
+        <div class="poster-card__title">{{ item.title }}</div>
+    </article>
+  {% endfor %}
+  </div>
+</section>
